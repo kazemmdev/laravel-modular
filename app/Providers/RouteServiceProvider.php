@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
@@ -10,18 +12,8 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * The path to your application's "home" route.
-     *
-     * Typically, users are redirected here after authentication.
-     *
-     * @var string
-     */
     public const HOME = '/home';
 
-    /**
-     * Define your route model bindings, pattern filters, and other route configuration.
-     */
     public function boot(): void
     {
         RateLimiter::for('api', function (Request $request) {
@@ -29,12 +21,12 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
-
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
+            // API version 1
+            Route::group(['middleware' => 'api', "prefix" => "api/v1", "as" => "api:v1:"], function () {
+                Route::group(['as' => 'auth:'], base_path('routes/api/v1/auth.php'));
+                Route::group(['as' => 'site:'], base_path('routes/api/v1/site.php'));
+                Route::group(['as' => 'admin:', "prefix" => "manage"], base_path('routes/api/v1/manage.php'));
+            });
         });
     }
 }

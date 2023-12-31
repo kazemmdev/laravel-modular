@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard'     => 'web',
         'passwords' => 'users',
     ],
 
@@ -37,7 +37,11 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver'   => 'session',
+            'provider' => 'users',
+        ],
+        'api' => [
+            'driver'   => 'passport',
             'provider' => 'users',
         ],
     ],
@@ -62,7 +66,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model'  => Modules\Users\User::class,
         ],
 
         // 'users' => [
@@ -93,8 +97,8 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
+            'table'    => 'password_reset_tokens',
+            'expire'   => 60,
             'throttle' => 60,
         ],
     ],
@@ -112,4 +116,10 @@ return [
 
     'password_timeout' => 10800,
 
+    "admin" => [
+        'name'     => env('ADMIN_NAME', 'admin'),
+        'email'    => env('ADMIN_EMAIL', 'admin@app.io'),
+        'password' => env('ADMIN_PASSWORD', 'password'),
+        'phone'    => env('ADMIN_PHONE', '09111111111'),
+    ]
 ];
